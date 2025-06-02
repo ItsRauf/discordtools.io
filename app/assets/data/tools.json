@@ -1,0 +1,8 @@
+[
+  {
+    "name": "Server Counter",
+    "description": "View a count of servers you are in as well as insights",
+    "image": "/img/server_counter.png",
+    "route": "/server-counter"
+  }
+]
