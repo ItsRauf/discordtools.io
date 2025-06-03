@@ -48,5 +48,9 @@ export default defineNuxtConfig({
     discordClientSecret: "",
   },
 
+  image: {
+    domains: ["cdn.discordapp.com"],
+  },
+
   compatibilityDate: "2024-11-27",
 });

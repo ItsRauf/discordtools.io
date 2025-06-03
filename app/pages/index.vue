@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import tools from "~/assets/data/tools.json"
+
+definePageMeta({
+  auth: false
+})
 </script>
 
 <template>

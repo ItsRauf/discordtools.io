@@ -1,13 +1,26 @@
 <script setup lang="ts">
 import { GuildFeature } from "discord-api-types/v10"
 import tools from "~/assets/data/tools.json"
-definePageMeta({
-  layout: "tool",
-  middleware: 'sidebase-auth'
-});
 
 const route = useRoute();
-const tool = tools.find(t => t.route === route.path)
+const tool = tools.find(t => t.route === route.path);
+
+const img = useImage()
+const url = useRequestURL()
+useSeoMeta({
+  title: tool?.name,
+  ogSiteName: "discordtools.io",
+  ogTitle: tool?.name,
+  description: tool?.description,
+  ogDescription: tool?.description,
+  ogImage: `${url.origin}${img(tool!.image)}`,
+  twitterCard: 'summary_large_image',
+})
+
+definePageMeta({
+  layout: "tool",
+  middleware: "client-auth"
+});
 
 const { data: auth } = useAuth();
 

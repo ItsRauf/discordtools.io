@@ -15,6 +15,7 @@ export default eventHandler(async (event) => {
   const guilds = await $fetch("https://discord.com/api/v10/users/@me/guilds", {
     headers: {
       Authorization: `Bearer ${token?.auth.access_token}`,
+      "Cache-Control": `max-age=${60 * 5}`,
     },
   });
 
