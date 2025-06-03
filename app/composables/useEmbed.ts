@@ -4,7 +4,6 @@ export const useEmbed = (
         name: string;
         description: string;
         image: string;
-        route: string;
       }
     | undefined
 ) => {

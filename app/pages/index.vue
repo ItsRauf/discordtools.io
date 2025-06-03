@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import tools from "~/assets/data/tools.json"
 
+useEmbed({
+  name: "DiscordTools",
+  description: "Utilities for power users",
+  image: "/embed.png"
+})
+
 definePageMeta({
   auth: false
 })
