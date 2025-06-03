@@ -7,7 +7,7 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="min-h-screen text-default font-sans flex flex-col gap-16 w-10/12 mx-auto">
+  <div class="min-h-screen text-default font-sans flex flex-col gap-16 w-11/12 mx-auto">
     <header class="mt-24">
       <UIcon
         name="ph:pipe-wrench-duotone"
@@ -26,13 +26,14 @@ definePageMeta({
           variant="subtle"
           :ui="{
             body: 'p-2 sm:p-2',
-            footer: 'p-2 sm:p-2',
+            footer: 'p-2 sm:p-2 flex-1',
           }"
+          class="h-full flex flex-col"
         >
           <NuxtImg :src="tool.image" />
           <template #footer>
-            <div class="flex flex-col items-center justify-center px-2 py-4 bg-elevated rounded-b-lg">
-              <h3 class="text-xl text-highlighted font-bold">
+            <div class="flex flex-col items-star justify-center px-2 py-4 bg-elevated rounded-b-lg h-full">
+              <h3 class="text-xl text-highlighted font-bold text-center">
                 {{ tool.name }}
               </h3>
               <p class="text-sm text-center text-pretty">

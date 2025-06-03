@@ -5,20 +5,10 @@ import tools from "~/assets/data/tools.json"
 const route = useRoute();
 const tool = tools.find(t => t.route === route.path);
 
-const img = useImage()
-const url = useRequestURL()
-useSeoMeta({
-  title: tool?.name,
-  ogSiteName: "discordtools.io",
-  ogTitle: tool?.name,
-  description: tool?.description,
-  ogDescription: tool?.description,
-  ogImage: `${url.origin}${img(tool!.image)}`,
-  twitterCard: 'summary_large_image',
-})
+useEmbed(tool)
 
 definePageMeta({
-  layout: "tool",
+  layout: "authed-tool",
   middleware: "client-auth"
 });
 

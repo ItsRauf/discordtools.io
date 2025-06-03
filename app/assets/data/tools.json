@@ -4,5 +4,11 @@
     "description": "View a count of servers you are in as well as insights",
     "image": "/img/server_counter.png",
     "route": "/server-counter"
+  },
+  {
+    "name": "Server Icon Previewer",
+    "description": "Preview how server icons will look",
+    "image": "/img/icon_previewer.png",
+    "route": "/icon-preview"
   }
 ]
