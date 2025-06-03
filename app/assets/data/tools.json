@@ -16,5 +16,11 @@
     "description": "Inspect details about Discord IDs",
     "image": "/img/snowflake.png",
     "route": "/snowflake"
+  },
+  {
+    "name": "Inline Timestamps",
+    "description": "Date and Time formatting in Discord messages",
+    "image": "/img/timestamp.png",
+    "route": "/timestamp"
   }
 ]
