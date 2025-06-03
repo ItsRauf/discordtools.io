@@ -10,5 +10,11 @@
     "description": "Preview how server icons will look",
     "image": "/img/icon_previewer.png",
     "route": "/icon-preview"
+  },
+  {
+    "name": "Snowflake Decoder",
+    "description": "Inspect details about Discord IDs",
+    "image": "/img/snowflake.png",
+    "route": "/snowflake"
   }
 ]

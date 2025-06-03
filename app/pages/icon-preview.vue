@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import tools from "~/assets/data/tools.json"
+import tools from "~/assets/data/tools.json";
 
 const route = useRoute();
-const tool = tools.find(t => t.route === route.path);
+const tool = tools.find((t) => t.route === route.path);
 
-useEmbed(tool)
+useEmbed(tool);
 
 definePageMeta({
   layout: "tool",
@@ -16,7 +16,7 @@ function handleFileSelect(e: Event) {
   const target = e?.target as HTMLInputElement;
   const reader = new FileReader();
   reader.readAsDataURL(target.files!.item(0) as Blob);
-  reader.onload = (e) => image.value = e.target!.result;
+  reader.onload = (e) => (image.value = e.target!.result);
 }
 </script>
 
@@ -48,7 +48,9 @@ function handleFileSelect(e: Event) {
       <div class="flex flex-col items-center justify-center gap-16 pt-24 pb-16">
         <div class="flex gap-16 ml-2">
           <figure class="flex flex-col gap-4 items-center">
-            <div class="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 bg-primary-400 rounded-full">
+            <div
+              class="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 bg-primary-400 rounded-full"
+            >
               <NuxtImg
                 v-if="image"
                 :src="image.toString()"
@@ -61,7 +63,9 @@ function handleFileSelect(e: Event) {
             </figcaption>
           </figure>
           <figure class="flex flex-col gap-4 items-center">
-            <div class="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 bg-primary-400 [clip-path:_url(#squircle)]">
+            <div
+              class="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 bg-primary-400 [clip-path:_url(#squircle)]"
+            >
               <NuxtImg
                 v-if="image"
                 :src="image.toString()"
@@ -87,7 +91,11 @@ function handleFileSelect(e: Event) {
             leading-icon="ph:trash-simple-duotone"
             size="xl"
             variant="soft"
-            @click="() => { image = undefined }"
+            @click="
+              () => {
+                image = undefined;
+              }
+            "
           >
             Remove Image
           </UButton>

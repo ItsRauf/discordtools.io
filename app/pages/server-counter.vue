@@ -1,30 +1,43 @@
 <script setup lang="ts">
-import { GuildFeature } from "discord-api-types/v10"
-import tools from "~/assets/data/tools.json"
+import { GuildFeature } from "discord-api-types/v10";
+import tools from "~/assets/data/tools.json";
 
 const route = useRoute();
-const tool = tools.find(t => t.route === route.path);
+const tool = tools.find((t) => t.route === route.path);
 
-useEmbed(tool)
+useEmbed(tool);
 
 definePageMeta({
   layout: "authed-tool",
-  middleware: "client-auth"
+  middleware: "client-auth",
 });
 
 const { data: auth } = useAuth();
 
-const headers = useRequestHeaders(['cookie']) as HeadersInit
-const { data: guilds } = useFetch("/api/@me/guilds", { headers, key: auth.value?.user?.name ?? "" })
+const headers = useRequestHeaders(["cookie"]) as HeadersInit;
+const { data: guilds } = useFetch("/api/@me/guilds", {
+  headers,
+  key: auth.value?.user?.name ?? "",
+});
 
 const dataset = computed(() => ({
-  "You Own": guilds.value?.filter(g => g.owner),
-  "You Moderate": guilds.value?.filter(g => +g.permissions & (1 << 13) && !g.owner),
-  "Community Enabled": guilds.value?.filter(g => g.features.includes(GuildFeature.Community)),
-  "Discovery Enabled": guilds.value?.filter(g => g.features.includes(GuildFeature.Discoverable)),
-  "Partnered": guilds.value?.filter(g => g.features.includes(GuildFeature.Partnered)),
-  "Verified": guilds.value?.filter(g => g.features.includes(GuildFeature.Verified)),
-}))
+  "You Own": guilds.value?.filter((g) => g.owner),
+  "You Moderate": guilds.value?.filter(
+    (g) => +g.permissions & (1 << 13) && !g.owner
+  ),
+  "Community Enabled": guilds.value?.filter((g) =>
+    g.features.includes(GuildFeature.Community)
+  ),
+  "Discovery Enabled": guilds.value?.filter((g) =>
+    g.features.includes(GuildFeature.Discoverable)
+  ),
+  Partnered: guilds.value?.filter((g) =>
+    g.features.includes(GuildFeature.Partnered)
+  ),
+  Verified: guilds.value?.filter((g) =>
+    g.features.includes(GuildFeature.Verified)
+  ),
+}));
 </script>
 
 <template>
@@ -35,16 +48,14 @@ const dataset = computed(() => ({
     </template>
     <UCard variant="soft">
       <template #header>
-        <h1 class="w-full text-4xl text-highlighted font-bold text-center flex items-center justify-center gap-2">
+        <h1
+          class="w-full text-4xl text-highlighted font-bold text-center flex items-center justify-center gap-2"
+        >
           You are in
-          <span
-            v-if="guilds"
-            class="text-primary font-bold underline"
-          >{{ guilds.length }}</span>
-          <USkeleton
-            v-else
-            class="inline-block w-[3ch] h-lh"
-          />
+          <span v-if="guilds" class="text-primary font-bold underline">{{
+            guilds.length
+          }}</span>
+          <USkeleton v-else class="inline-block w-[3ch] h-lh" />
           servers
         </h1>
       </template>
@@ -53,17 +64,19 @@ const dataset = computed(() => ({
           v-for="(value, key) in dataset"
           :key="key"
           :ui="{
-            body: 'flex flex-col gap-2'
+            body: 'flex flex-col gap-2',
           }"
         >
           <UCard
             variant="outline"
             :ui="{
-              body: 'flex items-center justify-center'
+              body: 'flex items-center justify-center',
             }"
           >
             <template #header>
-              <h2 class="text-2xl text-primary font-bold text-center">{{ key }}</h2>
+              <h2 class="text-2xl text-primary font-bold text-center">
+                {{ key }}
+              </h2>
             </template>
             <h1
               v-if="value"
@@ -97,20 +110,15 @@ const dataset = computed(() => ({
         <UModal
           class="col-span-full flex items-center justify-center"
           :ui="{
-            body: 'flex flex-col gap-2'
+            body: 'flex flex-col gap-2',
           }"
         >
           <div>
-            <UButton
-              size="lg"
-              variant="soft"
-            >
+            <UButton size="lg" variant="soft">
               <h2 class="text-xl text-primary font-bold">Show All</h2>
             </UButton>
           </div>
-          <template #title>
-            All Servers
-          </template>
+          <template #title> All Servers </template>
           <template #body>
             <div
               v-for="guild of guilds"
@@ -123,20 +131,14 @@ const dataset = computed(() => ({
                 size="xs"
               />
               <p class="text-pretty">{{ guild.name }}</p>
-              <UTooltip
-                :content="{ side: 'top' }"
-                text="Owner"
-              >
+              <UTooltip :content="{ side: 'top' }" text="Owner">
                 <UIcon
                   v-if="dataset['You Own']?.includes(guild)"
                   name="ph:crown-simple-fill"
                   class="text-warning"
                 />
               </UTooltip>
-              <UTooltip
-                :content="{ side: 'top' }"
-                text="Moderator"
-              >
+              <UTooltip :content="{ side: 'top' }" text="Moderator">
                 <UIcon
                   v-if="dataset['You Moderate']?.includes(guild)"
                   name="ph:shield-star-fill"
