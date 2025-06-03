@@ -31,7 +31,9 @@ definePageMeta({
           }"
           class="h-full flex flex-col"
         >
-          <NuxtImg :src="tool.image" />
+          <div class="relative w-full aspect-[2]">
+            <NuxtImg :src="tool.image" loading="eager" preload />
+          </div>
           <template #footer>
             <div
               class="flex flex-col items-star justify-center px-2 py-4 bg-elevated rounded-b-lg h-full"
