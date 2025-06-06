@@ -15,7 +15,7 @@ export const useEmbed = (
     ogTitle: tool?.name,
     description: tool?.description,
     ogDescription: tool?.description,
-    ogImage: `${url.origin}${img(tool!.image)}`,
+    ogImage: `${url.origin}${img(tool!.image, {}, { provider: "cloudflare" })}`,
     twitterCard: "summary_large_image",
   });
 };
