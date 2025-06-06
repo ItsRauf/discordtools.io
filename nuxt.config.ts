@@ -50,6 +50,9 @@ export default defineNuxtConfig({
 
   image: {
     domains: ["cdn.discordapp.com"],
+    cloudflare: {
+      baseURL: "https://discordtools.io",
+    },
   },
 
   compatibilityDate: "2024-11-27",
