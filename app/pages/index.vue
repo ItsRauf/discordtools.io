@@ -32,7 +32,12 @@ definePageMeta({
           class="h-full flex flex-col"
         >
           <div class="relative w-full aspect-[2]">
-            <NuxtImg :src="tool.image" loading="eager" preload />
+            <NuxtImg
+              provider="cloudflare"
+              :src="tool.image"
+              loading="eager"
+              preload
+            />
           </div>
           <template #footer>
             <div
