@@ -131,8 +131,10 @@ const columns: TableColumn<TimestampData>[] = [
       <p class="text-pretty">{{ tool?.description }}</p>
     </template>
     <UCard variant="soft">
-      <div class="flex gap-4">
-        <TimestampCalendar v-model="date" is-required />
+      <div class="flex sm:flex-row flex-col gap-4">
+        <div class="flex justify-center items-stretch">
+          <TimestampCalendar v-model="date" is-required />
+        </div>
         <UCard class="flex-1">
           <UTable :data="data" :columns="columns" />
         </UCard>

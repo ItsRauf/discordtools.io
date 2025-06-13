@@ -48,16 +48,16 @@ const dataset = computed(() => ({
     </template>
     <UCard variant="soft">
       <template #header>
-        <h1
-          class="w-full text-4xl text-highlighted font-bold text-center flex items-center justify-center gap-2"
+        <div
+          class="w-full text-4xl text-highlighted font-bold text-center flex-col sm:flex-row flex items-center justify-center gap-x-4 gap-y-2"
         >
           You are in
           <span v-if="guilds" class="text-primary font-bold underline">{{
             guilds.length
           }}</span>
           <USkeleton v-else class="inline-block w-[3ch] h-lh" />
-          servers
-        </h1>
+          <span class="flex-1 sm:flex-0">servers</span>
+        </div>
       </template>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <UModal

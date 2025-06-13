@@ -46,7 +46,7 @@ function handleFileSelect(e: Event) {
         </defs>
       </svg>
       <div class="flex flex-col items-center justify-center gap-16 pt-24 pb-16">
-        <div class="flex gap-16 ml-2">
+        <div class="flex sm:flex-row flex-col gap-16 ml-2">
           <figure class="flex flex-col gap-4 items-center">
             <div
               class="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 bg-primary-400 rounded-full"
@@ -78,7 +78,7 @@ function handleFileSelect(e: Event) {
             </figcaption>
           </figure>
         </div>
-        <div class="flex gap-4">
+        <div class="flex sm:flex-row flex-col gap-4">
           <label
             for="file-upload"
             class="inline-flex items-center justify-center dark:text-stone-100 border-2 border-primary-400 hover:border-primary-500 bg-primary-400/25 hover:bg-primary-500/50 transition-all duration-150 ease-in-out px-4 py-2 rounded-full hover:cursor-pointer text-lg font-semibold"
@@ -106,7 +106,7 @@ function handleFileSelect(e: Event) {
           class="hidden"
           accept=".jpg, .jpeg, .png"
           @change="handleFileSelect"
-        >
+        />
       </div>
     </UCard>
   </UCard>

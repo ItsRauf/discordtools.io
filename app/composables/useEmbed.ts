@@ -17,5 +17,11 @@ export const useEmbed = (
     ogDescription: tool?.description,
     ogImage: `${url.origin}${img(tool!.image, {}, { provider: "cloudflare" })}`,
     twitterCard: "summary_large_image",
+    themeColor: [
+      {
+        content: "#171717",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
   });
 };

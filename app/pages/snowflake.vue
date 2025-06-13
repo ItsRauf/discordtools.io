@@ -80,7 +80,7 @@ const deconstructed = computed(() => {
             Stats for nerds
           </UButton>
           <UCard variant="soft" class="mt-2">
-            <div class="grid grid-cols-3 gap-2">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <UCard>
                 <SnowflakeDataDisplay
                   :valid="isValidSnowflake"

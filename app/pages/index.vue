@@ -21,7 +21,7 @@ definePageMeta({
       <h1 class="text-4xl text-highlighted font-bold mt-4">DiscordTools</h1>
       <p class="text-pretty">Utilities for Power Users</p>
     </header>
-    <main class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <main class="grid grid-cols-1 pb-8 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <NuxtLink v-for="tool in tools" :key="tool.name" :to="tool.route">
         <UCard
           variant="subtle"
