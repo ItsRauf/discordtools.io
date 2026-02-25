@@ -22,5 +22,11 @@
     "description": "Date and Time formatting in Discord messages",
     "image": "/img/timestamp.png",
     "route": "/timestamp"
+  },
+  {
+    "name": "Components V2 Builder",
+    "description": "Drag-and-drop visual builder for Discord Components V2 messages",
+    "image": "/img/components_builder.png",
+    "route": "/components-builder"
   }
 ]
