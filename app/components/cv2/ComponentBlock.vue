@@ -101,7 +101,9 @@ const actionRowAllowedTypes = [
 function onMoveToContainer(evt: any): boolean {
   const draggedType = evt.draggedContext?.element?.type;
   if (!draggedType) return false;
-  return containerAllowedTypes.includes(draggedType);
+  if (!containerAllowedTypes.includes(draggedType)) return false;
+  if (evt.from !== evt.to && builder.totalComponents.value >= 40) return false;
+  return true;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -109,6 +111,7 @@ function onMoveToActionRow(evt: any): boolean {
   const draggedType = evt.draggedContext?.element?.type;
   if (!draggedType) return false;
   if (!actionRowAllowedTypes.includes(draggedType)) return false;
+  if (evt.from !== evt.to && builder.totalComponents.value >= 40) return false;
   return canAddToActionRow(props.component as BuilderActionRowData, draggedType);
 }
 </script>
@@ -248,7 +251,11 @@ function onMoveToActionRow(evt: any): boolean {
               variant="ghost"
               color="error"
               icon="ph:x"
-              @click.stop="() => { (component as BuilderSectionData).accessory = undefined; }"
+              @click.stop="() => {
+                const acc = (component as BuilderSectionData).accessory;
+                if (acc && builder.selectedId.value === acc._builderId) builder.selectComponent(null);
+                (component as BuilderSectionData).accessory = undefined;
+              }"
             />
           </div>
           <div v-else class="flex gap-1">

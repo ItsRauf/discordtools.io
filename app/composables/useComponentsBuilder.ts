@@ -128,7 +128,7 @@ function stripBuilderIds(obj: any): any {
     for (const [key, value] of Object.entries(obj)) {
       if (key === "_builderId") continue;
       if (value === undefined || value === null) continue;
-      if (value === "") continue;
+
       if (value === false && key !== "divider") continue;
       if (Array.isArray(value) && value.length === 0 && key !== "components") continue;
       cleaned[key] = stripBuilderIds(value);
@@ -191,6 +191,8 @@ export function useComponentsBuilder() {
   }
 
   function addComponent(type: ComponentType, parentId?: string): void {
+    if (totalComponents.value >= 40) return;
+
     const comp = createComponent(type);
 
     if (parentId) {
