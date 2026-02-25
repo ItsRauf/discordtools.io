@@ -59,16 +59,16 @@ function handleAddOption(type: ApplicationCommandOptionType) {
 const hasSubCommands = computed(() =>
   command.value.options.some(
     (o) =>
-      o.type === ApplicationCommandOptionType.SubCommand ||
-      o.type === ApplicationCommandOptionType.SubCommandGroup,
+      o.type === ApplicationCommandOptionType.Subcommand ||
+      o.type === ApplicationCommandOptionType.SubcommandGroup,
   ),
 );
 
 const hasNonSubCommands = computed(() =>
   command.value.options.some(
     (o) =>
-      o.type !== ApplicationCommandOptionType.SubCommand &&
-      o.type !== ApplicationCommandOptionType.SubCommandGroup,
+      o.type !== ApplicationCommandOptionType.Subcommand &&
+      o.type !== ApplicationCommandOptionType.SubcommandGroup,
   ),
 );
 
@@ -79,15 +79,15 @@ const disabledTypes = computed(() => {
       .filter((v) => typeof v === "number")
       .forEach((t) => {
         if (
-          t !== ApplicationCommandOptionType.SubCommand &&
-          t !== ApplicationCommandOptionType.SubCommandGroup
+      t !== ApplicationCommandOptionType.Subcommand &&
+          t !== ApplicationCommandOptionType.SubcommandGroup
         )
           disabled.add(t as ApplicationCommandOptionType);
       });
   }
   if (hasNonSubCommands.value) {
-    disabled.add(ApplicationCommandOptionType.SubCommand);
-    disabled.add(ApplicationCommandOptionType.SubCommandGroup);
+    disabled.add(ApplicationCommandOptionType.Subcommand);
+    disabled.add(ApplicationCommandOptionType.SubcommandGroup);
   }
   if (command.value.options.length >= 25) {
     Object.values(ApplicationCommandOptionType)

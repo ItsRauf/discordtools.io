@@ -1,7 +1,6 @@
 import {
   ApplicationCommandOptionType,
   ChannelType,
-  channelTypeLabels,
   type ApplicationCommand,
   type ApplicationCommandOption,
   type ApplicationCommandOptionChoice,
@@ -64,17 +63,27 @@ function cleanOption(opt: ApplicationCommandOption): Record<string, unknown> {
   return out;
 }
 
-function indent(code: string, spaces: number): string {
-  const pad = " ".repeat(spaces);
-  return code
-    .split("\n")
-    .map((line) => (line.trim() ? pad + line : line))
-    .join("\n");
+function escapeJs(str: string): string {
+  return str.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
 }
 
+function escapePy(str: string): string {
+  return str.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
+const pyChannelTypeMap: Record<number, string> = {
+  [ChannelType.GuildText]: "text",
+  [ChannelType.GuildVoice]: "voice",
+  [ChannelType.GuildCategory]: "category",
+  [ChannelType.GuildAnnouncement]: "news",
+  [ChannelType.GuildStageVoice]: "stage_voice",
+  [ChannelType.GuildForum]: "forum",
+  [ChannelType.GuildMedia]: "media",
+};
+
 const djsMethodMap: Record<ApplicationCommandOptionType, string> = {
-  [ApplicationCommandOptionType.SubCommand]: "addSubcommand",
-  [ApplicationCommandOptionType.SubCommandGroup]: "addSubcommandGroup",
+  [ApplicationCommandOptionType.Subcommand]: "addSubcommand",
+  [ApplicationCommandOptionType.SubcommandGroup]: "addSubcommandGroup",
   [ApplicationCommandOptionType.String]: "addStringOption",
   [ApplicationCommandOptionType.Integer]: "addIntegerOption",
   [ApplicationCommandOptionType.Boolean]: "addBooleanOption",
@@ -88,12 +97,12 @@ const djsMethodMap: Record<ApplicationCommandOptionType, string> = {
 
 function genDjsOption(opt: ApplicationCommandOption, depth: number): string {
   const pad = "  ".repeat(depth);
-  const isSubCmd = opt.type === ApplicationCommandOptionType.SubCommand;
-  const isSubGroup = opt.type === ApplicationCommandOptionType.SubCommandGroup;
+  const isSubCmd = opt.type === ApplicationCommandOptionType.Subcommand;
+  const isSubGroup = opt.type === ApplicationCommandOptionType.SubcommandGroup;
   const method = djsMethodMap[opt.type];
   const paramName = isSubCmd ? "sub" : isSubGroup ? "group" : "option";
 
-  let inner = `${paramName}.setName('${opt.name}')\n${pad}    .setDescription('${opt.description}')`;
+  let inner = `${paramName}.setName('${escapeJs(opt.name)}')\n${pad}    .setDescription('${escapeJs(opt.description)}')`;
 
   if (!isSubCmd && !isSubGroup && opt.required) {
     inner += `\n${pad}    .setRequired(true)`;
@@ -121,7 +130,7 @@ function genDjsOption(opt: ApplicationCommandOption, depth: number): string {
     opt.channel_types &&
     opt.channel_types.length > 0
   ) {
-    const ctypes = opt.channel_types.map((ct) => `ChannelType.${ChannelType[ct]}`).join(", ");
+    const ctypes = opt.channel_types.map((ct) => `ChannelType.${ChannelType[ct] ?? ct}`).join(", ");
     inner += `\n${pad}    .addChannelTypes(${ctypes})`;
   }
 
@@ -132,8 +141,8 @@ function genDjsOption(opt: ApplicationCommandOption, depth: number): string {
   if (opt.choices && opt.choices.length > 0 && !opt.autocomplete) {
     const choicesStr = opt.choices
       .map((c) => {
-        const val = typeof c.value === "number" ? c.value : `'${c.value}'`;
-        return `{ name: '${c.name}', value: ${val} }`;
+        const val = typeof c.value === "number" ? c.value : `'${escapeJs(String(c.value))}'`;
+        return `{ name: '${escapeJs(c.name)}', value: ${val} }`;
       })
       .join(", ");
     inner += `\n${pad}    .addChoices(${choicesStr})`;
@@ -162,7 +171,7 @@ function generateDjsCode(cmd: ApplicationCommand): string {
     ? "const { SlashCommandBuilder, ChannelType } = require('discord.js');"
     : "const { SlashCommandBuilder } = require('discord.js');";
 
-  let code = `${imports}\n\nconst command = new SlashCommandBuilder()\n  .setName('${cmd.name}')\n  .setDescription('${cmd.description}')`;
+  let code = `${imports}\n\nconst command = new SlashCommandBuilder()\n  .setName('${escapeJs(cmd.name)}')\n  .setDescription('${escapeJs(cmd.description)}')`;
 
   for (const opt of cmd.options) {
     code += `\n  .${genDjsOption(opt, 1)}`;
@@ -173,8 +182,8 @@ function generateDjsCode(cmd: ApplicationCommand): string {
 }
 
 const pyTypeMap: Record<ApplicationCommandOptionType, string> = {
-  [ApplicationCommandOptionType.SubCommand]: "",
-  [ApplicationCommandOptionType.SubCommandGroup]: "",
+  [ApplicationCommandOptionType.Subcommand]: "",
+  [ApplicationCommandOptionType.SubcommandGroup]: "",
   [ApplicationCommandOptionType.String]: "str",
   [ApplicationCommandOptionType.Integer]: "int",
   [ApplicationCommandOptionType.Boolean]: "bool",
@@ -189,8 +198,8 @@ const pyTypeMap: Record<ApplicationCommandOptionType, string> = {
 function generatePyCode(cmd: ApplicationCommand): string {
   const hasSubCommands = cmd.options.some(
     (o) =>
-      o.type === ApplicationCommandOptionType.SubCommand ||
-      o.type === ApplicationCommandOptionType.SubCommandGroup,
+      o.type === ApplicationCommandOptionType.Subcommand ||
+      o.type === ApplicationCommandOptionType.SubcommandGroup,
   );
 
   if (hasSubCommands) {
@@ -208,12 +217,12 @@ function generatePySimpleCode(cmd: ApplicationCommand): string {
 
   const decorators: string[] = [];
   decorators.push(
-    `@app_commands.command(name="${cmd.name}", description="${cmd.description}")`,
+    `@app_commands.command(name="${escapePy(cmd.name)}", description="${escapePy(cmd.description)}")`,
   );
 
   if (sortedOpts.length > 0) {
     const descParts = sortedOpts
-      .map((o) => `${o.name}="${o.description}"`)
+      .map((o) => `${o.name}="${escapePy(o.description)}"`)
       .join(", ");
     decorators.push(`@app_commands.describe(${descParts})`);
   }
@@ -222,8 +231,8 @@ function generatePySimpleCode(cmd: ApplicationCommand): string {
     if (opt.choices && opt.choices.length > 0 && !opt.autocomplete) {
       const choiceParts = opt.choices
         .map((c) => {
-          const val = typeof c.value === "number" ? c.value : `"${c.value}"`;
-          return `app_commands.Choice(name="${c.name}", value=${val})`;
+          const val = typeof c.value === "number" ? c.value : `"${escapePy(String(c.value))}"`;
+          return `app_commands.Choice(name="${escapePy(c.name)}", value=${val})`;
         })
         .join(", ");
       decorators.push(`@app_commands.choices(${opt.name}=[${choiceParts}])`);
@@ -234,7 +243,7 @@ function generatePySimpleCode(cmd: ApplicationCommand): string {
       opt.channel_types.length > 0
     ) {
       const ctypes = opt.channel_types
-        .map((ct) => `discord.ChannelType.${channelTypeLabels[ct]?.toLowerCase().replace(/ /g, "_") ?? ct}`)
+        .map((ct) => `discord.ChannelType.${pyChannelTypeMap[ct] ?? ct}`)
         .join(", ");
       decorators.push(
         `@app_commands.guild_channel_types(${ctypes})`,
@@ -303,9 +312,9 @@ function generatePyGroupCode(cmd: ApplicationCommand): string {
   code += `class ${className}Group(app_commands.Group):\n`;
 
   for (const opt of cmd.options) {
-    if (opt.type === ApplicationCommandOptionType.SubCommandGroup) {
+    if (opt.type === ApplicationCommandOptionType.SubcommandGroup) {
       code += generatePySubGroupCode(opt, 1);
-    } else if (opt.type === ApplicationCommandOptionType.SubCommand) {
+    } else if (opt.type === ApplicationCommandOptionType.Subcommand) {
       code += generatePySubCommandCode(opt, 1);
     }
   }
@@ -323,11 +332,11 @@ function generatePySubCommandCode(
   const optionalOpts = (opt.options || []).filter((o) => !o.required);
   const sortedOpts = [...requiredOpts, ...optionalOpts];
 
-  code += `${pad}@app_commands.command(name="${opt.name}", description="${opt.description}")\n`;
+  code += `${pad}@app_commands.command(name="${escapePy(opt.name)}", description="${escapePy(opt.description)}")\n`;
 
   if (sortedOpts.length > 0) {
     const descParts = sortedOpts
-      .map((o) => `${o.name}="${o.description}"`)
+      .map((o) => `${o.name}="${escapePy(o.description)}"`)
       .join(", ");
     code += `${pad}@app_commands.describe(${descParts})\n`;
   }
@@ -350,16 +359,17 @@ function generatePySubCommandCode(
 
 function generatePySubGroupCode(
   opt: ApplicationCommandOption,
-  _indentLevel: number,
+  indentLevel: number,
 ): string {
+  const pad = "    ".repeat(indentLevel);
   const className = opt.name
     .split("-")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join("");
 
-  let code = `\nclass ${className}SubGroup(app_commands.Group):\n`;
+  let code = `\n${pad}class ${className}SubGroup(app_commands.Group):\n`;
   for (const sub of opt.options || []) {
-    code += generatePySubCommandCode(sub, 1);
+    code += generatePySubCommandCode(sub, indentLevel + 1);
   }
   return code;
 }
@@ -381,8 +391,8 @@ export function useSlashCommand() {
       name: "",
       description: "",
       required: false,
-      ...(type === ApplicationCommandOptionType.SubCommand ||
-      type === ApplicationCommandOptionType.SubCommandGroup
+      ...(type === ApplicationCommandOptionType.Subcommand ||
+      type === ApplicationCommandOptionType.SubcommandGroup
         ? { options: [] }
         : {}),
       ...([

@@ -1,28 +1,5 @@
-export enum ApplicationCommandOptionType {
-  SubCommand = 1,
-  SubCommandGroup = 2,
-  String = 3,
-  Integer = 4,
-  Boolean = 5,
-  User = 6,
-  Channel = 7,
-  Role = 8,
-  Mentionable = 9,
-  Number = 10,
-  Attachment = 11,
-}
-
-export enum ChannelType {
-  GuildText = 0,
-  DM = 1,
-  GuildVoice = 2,
-  GroupDM = 3,
-  GuildCategory = 4,
-  GuildAnnouncement = 5,
-  GuildStageVoice = 13,
-  GuildForum = 15,
-  GuildMedia = 16,
-}
+export { ApplicationCommandOptionType, ChannelType } from "discord-api-types/v10";
+import { ApplicationCommandOptionType, ChannelType } from "discord-api-types/v10";
 
 export interface ApplicationCommandOptionChoice {
   id: string;
@@ -53,8 +30,8 @@ export interface ApplicationCommand {
 }
 
 export const optionTypeLabels: Record<ApplicationCommandOptionType, string> = {
-  [ApplicationCommandOptionType.SubCommand]: "Sub Command",
-  [ApplicationCommandOptionType.SubCommandGroup]: "Sub Command Group",
+  [ApplicationCommandOptionType.Subcommand]: "Sub Command",
+  [ApplicationCommandOptionType.SubcommandGroup]: "Sub Command Group",
   [ApplicationCommandOptionType.String]: "String",
   [ApplicationCommandOptionType.Integer]: "Integer",
   [ApplicationCommandOptionType.Boolean]: "Boolean",
@@ -67,8 +44,8 @@ export const optionTypeLabels: Record<ApplicationCommandOptionType, string> = {
 };
 
 export const optionTypeIcons: Record<ApplicationCommandOptionType, string> = {
-  [ApplicationCommandOptionType.SubCommand]: "ph:terminal-window-duotone",
-  [ApplicationCommandOptionType.SubCommandGroup]: "ph:folder-duotone",
+  [ApplicationCommandOptionType.Subcommand]: "ph:terminal-window-duotone",
+  [ApplicationCommandOptionType.SubcommandGroup]: "ph:folder-duotone",
   [ApplicationCommandOptionType.String]: "ph:text-aa-duotone",
   [ApplicationCommandOptionType.Integer]: "ph:hash-duotone",
   [ApplicationCommandOptionType.Boolean]: "ph:toggle-right-duotone",
@@ -81,8 +58,8 @@ export const optionTypeIcons: Record<ApplicationCommandOptionType, string> = {
 };
 
 export const optionTypeColors: Record<ApplicationCommandOptionType, string> = {
-  [ApplicationCommandOptionType.SubCommand]: "info",
-  [ApplicationCommandOptionType.SubCommandGroup]: "info",
+  [ApplicationCommandOptionType.Subcommand]: "info",
+  [ApplicationCommandOptionType.SubcommandGroup]: "info",
   [ApplicationCommandOptionType.String]: "success",
   [ApplicationCommandOptionType.Integer]: "warning",
   [ApplicationCommandOptionType.Boolean]: "neutral",

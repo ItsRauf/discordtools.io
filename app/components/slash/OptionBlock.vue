@@ -53,10 +53,10 @@ function onNameInput(e: Event) {
 const showNestedModal = ref(false);
 
 const isSubCommand = computed(
-  () => props.option.type === ApplicationCommandOptionType.SubCommand,
+  () => props.option.type === ApplicationCommandOptionType.Subcommand,
 );
 const isSubCommandGroup = computed(
-  () => props.option.type === ApplicationCommandOptionType.SubCommandGroup,
+  () => props.option.type === ApplicationCommandOptionType.SubcommandGroup,
 );
 
 const hasChoices = computed(() =>
@@ -112,14 +112,14 @@ const channelOptions = computed(() =>
 const nestedDisabledTypes = computed(() => {
   const disabled = new Set<ApplicationCommandOptionType>();
   if (isSubCommand.value) {
-    disabled.add(ApplicationCommandOptionType.SubCommand);
-    disabled.add(ApplicationCommandOptionType.SubCommandGroup);
+    disabled.add(ApplicationCommandOptionType.Subcommand);
+    disabled.add(ApplicationCommandOptionType.SubcommandGroup);
   }
   if (isSubCommandGroup.value) {
     Object.values(ApplicationCommandOptionType)
       .filter((v) => typeof v === "number")
       .forEach((t) => {
-        if (t !== ApplicationCommandOptionType.SubCommand)
+        if (t !== ApplicationCommandOptionType.Subcommand)
           disabled.add(t as ApplicationCommandOptionType);
       });
   }
