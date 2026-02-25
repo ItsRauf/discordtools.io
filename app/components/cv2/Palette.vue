@@ -35,13 +35,27 @@ function onClone(item: PaletteItem): BuilderAnyComponent {
   return builder.createComponent(item.type);
 }
 
+const topLevelTypes = [
+  ComponentType.ActionRow,
+  ComponentType.Section,
+  ComponentType.TextDisplay,
+  ComponentType.MediaGallery,
+  ComponentType.File,
+  ComponentType.Separator,
+  ComponentType.Container,
+];
+
 function isInteractive(type: ComponentType): boolean {
   return interactiveTypes.includes(type);
 }
 
 function handleClick(type: ComponentType) {
-  if (isInteractive(type)) {
-    toast.add({ title: "Must be placed inside an Action Row", description: "Drag this component into an Action Row instead.", duration: 2500 });
+  if (!topLevelTypes.includes(type)) {
+    if (isInteractive(type)) {
+      toast.add({ title: "Must be placed inside an Action Row", description: "Drag this component into an Action Row instead.", duration: 2500 });
+    } else {
+      toast.add({ title: "Cannot add at top level", description: "Drag this component into a Section instead.", duration: 2500 });
+    }
     return;
   }
   if (builder.components.value.length >= 10) {
