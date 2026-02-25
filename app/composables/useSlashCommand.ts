@@ -309,7 +309,7 @@ function generatePyGroupCode(cmd: ApplicationCommand): string {
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join("");
 
-  code += `class ${className}Group(app_commands.Group):\n`;
+  code += `class ${className}Group(app_commands.Group, name="${escapePy(cmd.name)}", description="${escapePy(cmd.description)}"):\n`;
 
   for (const opt of cmd.options) {
     if (opt.type === ApplicationCommandOptionType.SubcommandGroup) {
@@ -341,6 +341,28 @@ function generatePySubCommandCode(
     code += `${pad}@app_commands.describe(${descParts})\n`;
   }
 
+  for (const o of sortedOpts) {
+    if (o.choices && o.choices.length > 0 && !o.autocomplete) {
+      const choiceParts = o.choices
+        .map((c) => {
+          const val = typeof c.value === "number" ? c.value : `"${escapePy(String(c.value))}"`;
+          return `app_commands.Choice(name="${escapePy(c.name)}", value=${val})`;
+        })
+        .join(", ");
+      code += `${pad}@app_commands.choices(${o.name}=[${choiceParts}])\n`;
+    }
+    if (
+      o.type === ApplicationCommandOptionType.Channel &&
+      o.channel_types &&
+      o.channel_types.length > 0
+    ) {
+      const ctypes = o.channel_types
+        .map((ct) => `discord.ChannelType.${pyChannelTypeMap[ct] ?? ct}`)
+        .join(", ");
+      code += `${pad}@app_commands.guild_channel_types(${ctypes})\n`;
+    }
+  }
+
   const params = ["self", "interaction: discord.Interaction"];
   for (const o of sortedOpts) {
     let typeAnnotation = pyTypeMap[o.type] || "str";
@@ -367,7 +389,7 @@ function generatePySubGroupCode(
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join("");
 
-  let code = `\n${pad}class ${className}SubGroup(app_commands.Group):\n`;
+  let code = `\n${pad}class ${className}SubGroup(app_commands.Group, name="${escapePy(opt.name)}", description="${escapePy(opt.description)}"):\n`;
   for (const sub of opt.options || []) {
     code += generatePySubCommandCode(sub, indentLevel + 1);
   }
