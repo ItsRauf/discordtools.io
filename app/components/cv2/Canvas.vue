@@ -19,7 +19,9 @@ function onMoveToRoot(evt: any): boolean {
   const draggedType = evt.draggedContext?.element?.type;
   if (!draggedType) return false;
   if (!topLevelTypes.includes(draggedType)) return false;
-  if (evt.from !== evt.to && builder.totalComponents.value >= 40) return false;
+  if (evt.from === evt.to) return true;
+  if (builder.totalComponents.value >= 40) return false;
+  if (builder.components.value.length >= 10) return false;
   return true;
 }
 </script>
