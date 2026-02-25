@@ -1,0 +1,18 @@
+{
+  "$schema": "https://capy.ai/settings.schema.json",
+  "hooks": {
+    "previews": [
+      {
+        "name": "Nuxt Dev Server",
+        "port": 3000
+      }
+    ],
+    "terminals": [
+      {
+        "name": "Dev Server",
+        "command": "pnpm dev",
+        "auto": true
+      }
+    ]
+  }
+}
