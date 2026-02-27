@@ -22,5 +22,11 @@
     "description": "Date and Time formatting in Discord messages",
     "image": "/img/timestamp.png",
     "route": "/timestamp"
+  },
+  {
+    "name": "Slash Command Builder",
+    "description": "Generate slash commands right in your browser.",
+    "image": "/img/slash_builder.png",
+    "route": "/slash-command"
   }
 ]
