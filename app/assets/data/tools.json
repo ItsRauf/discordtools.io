@@ -25,7 +25,7 @@
   },
   {
     "name": "Slash Command Builder",
-    "description": "Build Discord slash commands visually",
+    "description": "Generate slash commands right in your browser.",
     "image": "/img/slash_builder.png",
     "route": "/slash-command"
   }
